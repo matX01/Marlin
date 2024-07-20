@@ -2697,32 +2697,44 @@
 #undef _IS_E_AUTO
 
 #if HAS_FAN11
-  #define FAN_COUNT 12
+  #define BOARD_FAN_COUNT 12
 #elif HAS_FAN10
-  #define FAN_COUNT 11
+  #define BOARD_FAN_COUNT 11
 #elif HAS_FAN9
-  #define FAN_COUNT 10
+  #define BOARD_FAN_COUNT 10
 #elif HAS_FAN8
-  #define FAN_COUNT 9
+  #define BOARD_FAN_COUNT 9
 #elif HAS_FAN7
-  #define FAN_COUNT 8
+  #define BOARD_FAN_COUNT 8
 #elif HAS_FAN6
-  #define FAN_COUNT 7
+  #define BOARD_FAN_COUNT 7
 #elif HAS_FAN5
-  #define FAN_COUNT 6
+  #define BOARD_FAN_COUNT 6
 #elif HAS_FAN4
-  #define FAN_COUNT 5
+  #define BOARD_FAN_COUNT 5
 #elif HAS_FAN3
-  #define FAN_COUNT 4
+  #define BOARD_FAN_COUNT 4
 #elif HAS_FAN2
-  #define FAN_COUNT 3
+  #define BOARD_FAN_COUNT 3
 #elif HAS_FAN1
-  #define FAN_COUNT 2
+  #define BOARD_FAN_COUNT 2
 #elif HAS_FAN0
-  #define FAN_COUNT 1
+  #define BOARD_FAN_COUNT 1
 #else
-  #define FAN_COUNT 0
+  #define BOARD_FAN_COUNT 0
 #endif
+
+
+
+#if ENABLED(MULTIBOARD)
+
+  #define FAN_COUNT SUM(BOARD_FAN_COUNT, SLAVE_BOARD_FAN_COUNT)
+
+#else
+
+   #define FAN_COUNT BOARD_FAN_COUNT
+
+#endif 
 
 #if FAN_COUNT > 0
   #define HAS_FAN 1

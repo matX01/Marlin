@@ -78,6 +78,9 @@
   #include "../feature/closedloop.h"
 #endif
 
+#if ENABLED(MULTIBOARD) //FIXME DEV
+  #include "../feature/multiboard/multiboard_core.h"
+#endif
 // Feedrate for manual moves
 #ifdef MANUAL_FEEDRATE
   constexpr xyze_feedrate_t manual_feedrate_mm_m = MANUAL_FEEDRATE,

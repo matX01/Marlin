@@ -112,6 +112,9 @@
 #if HAS_CUTTER
   #include "../feature/spindle_laser.h"
 #endif
+#if ENABLED(MULTIBOARD) //FIXME DEV
+  #include "../feature/multiboard/multiboard_core.h"
+#endif
 
 // Delay for delivery of first block to the stepper ISR, if the queue contains 2 or
 // fewer movements. The delay is measured in milliseconds, and must be less than 250ms
@@ -1175,7 +1178,19 @@ void Planner::recalculate(const_float_t safe_exit_speed_sqr) {
  */
 #if HAS_FAN
 
-  void Planner::sync_fan_speeds(uint8_t (&fan_speed)[FAN_COUNT]) {
+  void Planner::sync_fan_speeds(uint8_t (&fan_speed)[FAN_COUNT]) {  //TODO Ici sont géré les impulsions des FAN.
+
+    const millis_t ms = millis();
+
+    #if ENABLED(MULTIBOARD)
+
+      for(uint8_t i = BOARD_FAN_COUNT;i < FAN_COUNT;i ++){
+
+        multiboard.set_fan_speed(i,fan_speed[i]);
+      
+      }
+
+    #endif
 
     #if ENABLED(FAN_SOFT_PWM)
       #define _FAN_SET(F) thermalManager.soft_pwm_amount_fan[F] = CALC_FAN_SPEED(fan_speed[F]);
@@ -1184,7 +1199,7 @@ void Planner::recalculate(const_float_t safe_exit_speed_sqr) {
     #endif
     #define FAN_SET(F) do{ kickstart_fan(fan_speed, ms, F); _FAN_SET(F); }while(0)
 
-    const millis_t ms = millis();
+    
     TERN_(HAS_FAN0, FAN_SET(0)); TERN_(HAS_FAN1, FAN_SET(1));
     TERN_(HAS_FAN2, FAN_SET(2)); TERN_(HAS_FAN3, FAN_SET(3));
     TERN_(HAS_FAN4, FAN_SET(4)); TERN_(HAS_FAN5, FAN_SET(5));

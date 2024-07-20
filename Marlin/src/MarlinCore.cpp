@@ -265,6 +265,10 @@
   #include "feature/rs485.h"
 #endif
 
+#if ENABLED(MULTIBOARD)
+  #include "feature/multiboard/multiboard_core.h"
+#endif
+
 PGMSTR(M112_KILL_STR, "M112 Shutdown");
 
 MarlinState marlin_state = MarlinState::MF_INITIALIZING;
